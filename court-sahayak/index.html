@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Court Sahayak | AI-Driven Research Engine for Commercial Courts</title>
+  <meta name="description" content="AI-Driven Research Engine & Evidence Credibility Analyzer for Commercial Courts (SIH1701 - Ministry of Law & Justice, Govt of India)">
+  <!-- Google Fonts: Inter, Outfit, Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="theme-judicial" data-role="judge">
+  <!-- Header / Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <div class="emblem-container">
+          <svg class="emblem-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="46" stroke="url(#goldGradient)" stroke-width="3" fill="#0c1a2e"/>
+            <!-- Scales of Justice -->
+            <path d="M50 18 V76 M32 76 H68 M28 82 H72" stroke="url(#goldGradient)" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M22 30 H78" stroke="url(#goldGradient)" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Left Pan -->
+            <path d="M22 30 L12 50 H32 L22 30 Z" stroke="#E5A93C" stroke-width="2" fill="rgba(229,169,60,0.15)"/>
+            <!-- Right Pan -->
+            <path d="M78 30 L68 50 H88 L78 30 Z" stroke="#E5A93C" stroke-width="2" fill="rgba(229,169,60,0.15)"/>
+            <!-- AI Star / Ashoka Chakra hint -->
+            <circle cx="50" cy="30" r="4" fill="#E5A93C"/>
+            <defs>
+              <linearGradient id="goldGradient" x1="0" y1="0" x2="100" y2="100">
+                <stop offset="0%" stop-color="#F6D365"/>
+                <stop offset="50%" stop-color="#D4AF37"/>
+                <stop offset="100%" stop-color="#AA771C"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <div class="brand-badge-row">
+            <span class="badge-govt" data-i18n="govt_badge">GOVT. OF INDIA • DEPT. OF JUSTICE</span>
+            <span class="badge-sih">SIH1701</span>
+          </div>
+          <h1 class="brand-title">कोर्ट सहायक <span class="brand-sub-title">| Court Sahayak</span></h1>
+          <p class="brand-tagline" data-i18n="app_tagline">AI-Driven Research Engine & Evidence Admissibility Platform for Commercial Courts</p>
+        </div>
+      </div>
+
+      <!-- Controls: Role Switcher, Language Dropdown, Live Status -->
+      <div class="header-actions">
+        <!-- Live Ticker / Pendency Pulse -->
+        <div class="court-status-pill">
+          <span class="pulse-dot"></span>
+          <span class="status-text" data-i18n="live_court_status">Commercial Bench Active</span>
+        </div>
+
+        <!-- Role Toggle: Judge vs Lawyer -->
+        <div class="role-selector" title="Switch Portal Mode">
+          <button id="role-btn-judge" class="role-btn active" data-role="judge">
+            <svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><circle cx="12" cy="12" r="9"/></svg>
+            <span data-i18n="role_judge">Judge / Court</span>
+          </button>
+          <button id="role-btn-lawyer" class="role-btn" data-role="lawyer">
+            <svg class="role-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span data-i18n="role_lawyer">Lawyer / Advocate</span>
+          </button>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="lang-selector-wrapper">
+          <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <select id="lang-select" class="lang-select" aria-label="Select Language">
+            <option value="en">English (ENG)</option>
+            <option value="hi" selected>हिन्दी (Hindi)</option>
+            <option value="mr">मराठी (Marathi)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="gu">ગુજરાતી (Gujarati)</option>
+          </select>
+        </div>
+
+        <!-- Plain Language / Simple Mode Toggle -->
+        <button id="simple-mode-toggle" class="plain-mode-btn" title="Toggle Plain English/Simple Language explanations">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="plain-mode-label" data-i18n="explain_simply">Explain Simply</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Breaking Commercial Law Ticker -->
+    <div class="live-ticker-bar">
+      <div class="ticker-label"><span class="ticker-flair" data-i18n="live_feed_label">🔴 REAL-TIME CASES & PRECEDENTS:</span></div>
+      <div class="ticker-viewport">
+        <div id="ticker-content" class="ticker-track">
+          <!-- Populated dynamically by realCasesData.js -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-section-title" data-i18n="nav_suite_title">COMMERCIAL BENCH SUITE</div>
+      <nav class="sidebar-nav">
+        <!-- Judge Navigation Items -->
+        <div class="nav-group nav-group-judge">
+          <button class="nav-item active" data-tab="dashboard">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span data-i18n="nav_dashboard">Bench Dashboard</span>
+          </button>
+          <button class="nav-item" data-tab="evidence-analyzer">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span data-i18n="nav_evidence_analyzer">AI Evidence Predictor</span>
+            <span class="nav-chip">AI %</span>
+          </button>
+          <button class="nav-item" data-tab="pipeline-viewer">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span data-i18n="nav_doc_pipeline">9-Stage OCR Pipeline</span>
+          </button>
+          <button class="nav-item" data-tab="knowledge-graph">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            <span data-i18n="nav_knowledge_graph">Legal Knowledge Graph</span>
+          </button>
+          <button class="nav-item" data-tab="similar-precedents">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span data-i18n="nav_precedent_finder">Precedent Finder & Match</span>
+          </button>
+          <button class="nav-item" data-tab="lawyer-scoring">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span data-i18n="nav_lawyer_score">Lawyer Honesty Score</span>
+          </button>
+          <button class="nav-item" data-tab="historical-trends">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span data-i18n="nav_historical_trends">Outcome & Pendency Trends</span>
+          </button>
+        </div>
+
+        <!-- Lawyer Navigation Items -->
+        <div class="nav-group nav-group-lawyer" style="display: none;">
+          <button class="nav-item active" data-tab="lawyer-workspace">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <span data-i18n="nav_lawyer_workspace">Advocate Workspace</span>
+          </button>
+          <button class="nav-item" data-tab="debate-simulator">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span data-i18n="nav_debate_arena">AI Courtroom Debate Simulator</span>
+            <span class="nav-chip gold">Live AI</span>
+          </button>
+          <button class="nav-item" data-tab="key-issues">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 16 12 12 8"/></svg>
+            <span data-i18n="nav_key_issues">Key Issue Prioritizer</span>
+          </button>
+        </div>
+
+        <!-- Shared Section -->
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title" data-i18n="nav_real_world_title">LIVE JURISPRUDENCE</div>
+        <button class="nav-item" data-tab="real-cases">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span data-i18n="nav_real_cases">Ongoing Landmark Cases (2024-26)</span>
+          <span class="nav-badge-count" id="ongoing-cases-count">8</span>
+        </button>
+      </nav>
+
+      <!-- Active Case Selector Widget in Sidebar -->
+      <div class="sidebar-active-case-card">
+        <div class="active-case-header">
+          <span class="active-case-label" data-i18n="active_case_label">CURRENT LOADED SUIT</span>
+          <span class="badge-status priority-high" id="sidebar-suit-status">Hearing Today</span>
+        </div>
+        <h4 id="sidebar-suit-title" class="active-case-title">Alpha Infra vs. Apex Infra Ltd.</h4>
+        <p id="sidebar-suit-type" class="active-case-meta">Comm. Suit 104/2025 • ₹14.50 Cr Dispute</p>
+        <div class="active-case-score-bar">
+          <div class="score-label-row">
+            <span data-i18n="overall_evidence_score">Evidence Reliability</span>
+            <strong id="sidebar-evidence-score">87.4%</strong>
+          </div>
+          <div class="progress-track">
+            <div id="sidebar-score-fill" class="progress-fill" style="width: 87.4%;"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Viewport Canvas -->
+    <div class="app-main-viewport">
+      <!-- Top Action Bar for Current Case Selector & Search -->
+      <section class="case-selection-bar">
+        <div class="case-dropdown-group">
+          <label for="select-active-case" class="case-dropdown-label" data-i18n="select_case_prompt">Select Case Dossier:</label>
+          <select id="select-active-case" class="case-select-dropdown">
+            <!-- Populated dynamically from sampleDossiers.js -->
+          </select>
+        </div>
+
+        <div class="case-quick-stats">
+          <div class="stat-pill">
+            <span class="stat-name" data-i18n="stat_court">Court:</span>
+            <span id="quick-court-name" class="stat-val">Delhi Commercial Court, Patiala House</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-name" data-i18n="stat_claim">Claim:</span>
+            <span id="quick-claim-val" class="stat-val highlight-gold">₹14.50 Crore</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-name" data-i18n="stat_statute">Core Statute:</span>
+            <span id="quick-statute-val" class="stat-val">ICA Sec 73 & Arb Act Sec 9</span>
+          </div>
+        </div>
+
+        <button id="btn-quick-upload" class="btn-primary-action">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span data-i18n="btn_upload_evidence">Upload New Evidence / Doc</span>
+        </button>
+      </section>
+
+      <!-- TAB 1: JUDGE DASHBOARD -->
+      <section id="tab-dashboard" class="tab-pane active">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="dash_title">Commercial Court Master Bench Dashboard</h2>
+            <p class="pane-desc" data-i18n="dash_desc">Real-time pendency management, case triage analytics, and AI evidence credibility metrics.</p>
+          </div>
+          <div class="pane-actions">
+            <button class="btn-secondary" id="btn-export-bench-report">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span data-i18n="btn_export_summary">Export Bench Brief</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card gold-border">
+            <div class="kpi-header">
+              <span class="kpi-title" data-i18n="kpi_active_suits">Active Commercial Suits</span>
+              <span class="kpi-icon-badge gold">🏛️</span>
+            </div>
+            <div class="kpi-body">
+              <span class="kpi-value" id="kpi-total-suits">42</span>
+              <span class="kpi-trend positive" data-i18n="kpi_disposed_trend">↓ 14% Pendency reduction</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title" data-i18n="kpi_avg_evidence_score">Avg Evidence Authenticity</span>
+              <span class="kpi-icon-badge blue">📊</span>
+            </div>
+            <div class="kpi-body">
+              <span class="kpi-value" id="kpi-evidence-score">84.2%</span>
+              <span class="kpi-trend positive" data-i18n="kpi_high_reliability">High Reliability u/s BSA 63</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title" data-i18n="kpi_ready_for_order">Ready for Final Judgment</span>
+              <span class="kpi-icon-badge green">⚖️</span>
+            </div>
+            <div class="kpi-body">
+              <span class="kpi-value" id="kpi-ready-judgments">11</span>
+              <span class="kpi-trend positive" data-i18n="kpi_zero_missing_docs">Zero missing documents</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-title" data-i18n="kpi_missing_doc_alerts">Document Deficiency Alerts</span>
+              <span class="kpi-icon-badge red">⚠️</span>
+            </div>
+            <div class="kpi-body">
+              <span class="kpi-value highlight-danger" id="kpi-missing-docs">4</span>
+              <span class="kpi-trend negative" data-i18n="kpi_notices_issued">65B/BSA certificates pending</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Triage & Active Cases Table -->
+        <div class="dashboard-grid-row">
+          <div class="court-card flex-2">
+            <div class="card-header-flex">
+              <div>
+                <h3 class="card-title" data-i18n="dash_case_triage_title">Commercial Cause List & AI Priority Triage</h3>
+                <p class="card-subtitle" data-i18n="dash_case_triage_sub">Prioritized by evidence completeness, financial exposure, and age of dispute.</p>
+              </div>
+              <div class="filter-pills">
+                <button class="filter-pill active" data-filter="all" data-i18n="filter_all">All (6)</button>
+                <button class="filter-pill" data-filter="high_score" data-i18n="filter_strong_evidence">Strong Evidence (>80%)</button>
+                <button class="filter-pill" data-filter="deficiency" data-i18n="filter_deficiency">Missing Docs</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="judicial-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="th_suit_no">Suit No. & Parties</th>
+                    <th data-i18n="th_type">Dispute Type</th>
+                    <th data-i18n="th_claim_val">Claim Value</th>
+                    <th data-i18n="th_evidence_conf">Evidence Confidence</th>
+                    <th data-i18n="th_predicted_outcome">AI Predicted Outcome</th>
+                    <th data-i18n="th_status">Status</th>
+                    <th data-i18n="th_action">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="cases-triage-table-body">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Fast-Track Recommendation & Daily Summary -->
+          <div class="court-card flex-1">
+            <div class="card-header-flex">
+              <h3 class="card-title" data-i18n="bench_insights_title">AI Bench Recommendations</h3>
+              <span class="badge-ai-intel">AI INTEL</span>
+            </div>
+            <div class="bench-recommendations-list" id="bench-recommendations-list">
+              <!-- Populated dynamically -->
+            </div>
+            <div class="court-card-footer">
+              <button class="btn-outline-full" id="btn-run-full-audit" data-i18n="btn_run_fast_track">
+                ⚡ Generate Order IX Rule 6 Summary
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: AI EVIDENCE ANALYZER & STATUTORY PENALTIES -->
+      <section id="tab-evidence-analyzer" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="evidence_analyzer_title">AI Evidence Authenticity & Statutory Penalties Predictor</h2>
+            <p class="pane-desc" data-i18n="evidence_analyzer_desc">Analyzes uploaded documentary evidence, predicts probability of culpability / liability percentage, and computes statutory punishments / civil damages under Indian law.</p>
+          </div>
+          <div class="pane-controls">
+            <button class="btn-primary-action" id="btn-trigger-ai-audit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span data-i18n="btn_run_evidence_analysis">Run Full AI Evidence Audit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Upload or Paste Document Dropzone -->
+        <div class="evidence-upload-hero">
+          <div class="dropzone-box" id="evidence-dropzone">
+            <input type="file" id="file-upload-input" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" style="display:none;">
+            <div class="dropzone-inner">
+              <div class="upload-icon-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h3 data-i18n="dropzone_title">Drag & Drop Commercial Contracts, Invoices, Cheques, or Pleadings</h3>
+              <p class="dropzone-sub" data-i18n="dropzone_desc">Supports PDF, DOCX, Scanned Legal Receipts, Bank Statements, WhatsApp / Email Chains (with Sec 65B/BSA 63 validation)</p>
+              <div class="dropzone-buttons">
+                <button class="btn-secondary" id="btn-browse-files" data-i18n="btn_browse_files">Browse Files</button>
+                <button class="btn-text-gold" id="btn-paste-text-modal" data-i18n="btn_paste_text">Or Paste Legal Text Directly</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Evidence Breakdown Row -->
+        <div class="evidence-results-layout">
+          <!-- Left: Detailed Evidence Dossier Scorecards -->
+          <div class="evidence-left-col">
+            <!-- Overall Probability & Liability Verdict Card -->
+            <div class="verdict-banner-card" id="verdict-banner">
+              <div class="verdict-gauge-section">
+                <div class="circular-score-wrapper">
+                  <svg class="circular-chart" viewBox="0 0 36 36">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path class="circle-fill" id="circular-score-bar" stroke-dasharray="88, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <text x="18" y="20.35" class="percentage-text" id="circular-score-val">88.4%</text>
+                  </svg>
+                  <span class="score-sub-label" data-i18n="evidence_authenticity_label">Evidence Authenticity Score</span>
+                </div>
+              </div>
+              <div class="verdict-details-section">
+                <div class="verdict-badge-row">
+                  <span class="badge-verdict primary" id="verdict-finding-badge" data-i18n="verdict_finding_high">PRIMA FACIE BREACH ESTABLISHED</span>
+                  <span class="badge-admissibility" id="verdict-admissibility-badge">ADMISSIBLE (BSA 2023 / Sec 63)</span>
+                </div>
+                <h3 class="verdict-heading" id="verdict-title">Strong documentary proof of breach and non-payment against Defendant</h3>
+                <p class="verdict-summary" id="verdict-summary-text">
+                  Analysis of 7 uploaded documents demonstrates an 88.4% corroboration index. Signed Master Services Agreement Clause 14 (Liquidated Damages) directly matches unpaid Invoice series (INV-8921 to 8925) and bank reconciliation ledgers.
+                </p>
+
+                <!-- Plain Language Callout Box -->
+                <div class="plain-language-callout" id="plain-language-box">
+                  <div class="callout-header">
+                    <span class="callout-icon">💡</span>
+                    <strong data-i18n="plain_language_title">In Simple Words (Layperson Explanation):</strong>
+                  </div>
+                  <p class="callout-body" id="plain-language-text">
+                    The documents provided clearly prove that the buyer signed the contract, received the goods/services, and failed to pay within 30 days despite written reminders. The bank statement confirms zero payment received.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Evidence Documents Corroboration Breakdown -->
+            <div class="court-card">
+              <div class="card-header-flex">
+                <div>
+                  <h3 class="card-title" data-i18n="evidence_item_title">Document-by-Document Credibility & Authenticity</h3>
+                  <p class="card-subtitle" data-i18n="evidence_item_sub">Each exhibit tested for electronic certificate, party signatures, timestamps, and cross-reference validity.</p>
+                </div>
+              </div>
+              <div class="evidence-items-list" id="evidence-items-container">
+                <!-- Dynamically populated from active dossier -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Statutory Penalties, Liabilities & Remedies Predictor -->
+          <div class="evidence-right-col">
+            <!-- Statutory Punishment / Damages Predictor Card -->
+            <div class="court-card penalty-card">
+              <div class="card-header-flex">
+                <div>
+                  <div class="penalty-tag" data-i18n="statutory_penalties_tag">INDIAN STATUTORY CONSEQUENCES</div>
+                  <h3 class="card-title" data-i18n="statutory_penalties_title">Applicable Punishments, Damages & Remedies</h3>
+                </div>
+                <span class="badge-gavel">⚖️</span>
+              </div>
+
+              <div class="penalties-content" id="penalties-container">
+                <!-- Populated dynamically based on case facts -->
+              </div>
+            </div>
+
+            <!-- Missing / Deficient Document Warning Box -->
+            <div class="court-card alert-card-border" id="missing-doc-card">
+              <div class="card-header-flex">
+                <h4 class="alert-title-danger">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <span data-i18n="missing_doc_title">Missing / Deficient Documents Alert</span>
+                </h4>
+              </div>
+              <p class="alert-desc" data-i18n="missing_doc_desc">The AI pipeline identified procedural or statutory documents missing from the suit file:</p>
+              <ul class="missing-docs-list" id="missing-docs-list">
+                <!-- Populated dynamically -->
+              </ul>
+              <button class="btn-secondary-sm" id="btn-issue-notice" data-i18n="btn_issue_order_xi">Issue Order XI Rule 5 Discovery Notice</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: 9-STAGE OCR & NLP EXTRACTION PIPELINE -->
+      <section id="tab-pipeline-viewer" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="pipeline_title">9-Stage Document Verification & OCR Pipeline</h2>
+            <p class="pane-desc" data-i18n="pipeline_desc">Step-by-step automated workflow processing raw court filings into structured legal graph entities and dependency checks.</p>
+          </div>
+          <div class="pipeline-controls">
+            <button class="btn-secondary" id="btn-restart-pipeline-anim">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              <span data-i18n="btn_replay_pipeline">Replay Processing Flow</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive 9-Step Flow Diagram -->
+        <div class="pipeline-flow-container" id="pipeline-flow-steps">
+          <!-- Populated dynamically with 9 stages -->
+        </div>
+
+        <!-- Active Stage Detail Inspector -->
+        <div class="court-card pipeline-stage-detail" id="pipeline-stage-detail-box">
+          <!-- Dynamically updated when clicking any pipeline step -->
+        </div>
+      </section>
+
+      <!-- TAB 4: LEGAL KNOWLEDGE GRAPH -->
+      <section id="tab-knowledge-graph" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="graph_title">Interactive Legal Knowledge Graph</h2>
+            <p class="pane-desc" data-i18n="graph_desc">Visualizing relationships between Plaintiff, Defendant, Contracts, Invoices, Bank Records, WhatsApp Trails, and Statutory Provisions.</p>
+          </div>
+          <div class="graph-toolbar">
+            <div class="graph-legend">
+              <span class="legend-item"><span class="legend-dot dot-party"></span> Parties</span>
+              <span class="legend-item"><span class="legend-dot dot-contract"></span> Contracts</span>
+              <span class="legend-item"><span class="legend-dot dot-evidence"></span> Evidence</span>
+              <span class="legend-item"><span class="legend-dot dot-statute"></span> Statutory Sections</span>
+              <span class="legend-item"><span class="legend-dot dot-monetary"></span> Financial Claim</span>
+            </div>
+            <button class="btn-secondary-sm" id="btn-reset-graph-zoom" data-i18n="btn_reset_view">Reset Graph</button>
+          </div>
+        </div>
+
+        <div class="graph-canvas-container">
+          <svg id="knowledge-graph-svg" class="graph-svg"></svg>
+          <div id="graph-node-tooltip" class="graph-tooltip" style="display: none;"></div>
+          <!-- Node Inspector Drawer -->
+          <div id="graph-node-drawer" class="graph-drawer" style="display: none;">
+            <div class="drawer-header">
+              <h4 id="drawer-node-title">Node Details</h4>
+              <button class="btn-close-drawer" id="btn-close-drawer">×</button>
+            </div>
+            <div id="drawer-node-content" class="drawer-body"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: SIMILAR PRECEDENTS & CASE LAWS -->
+      <section id="tab-similar-precedents" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="precedent_title">AI Similar Case & Landmark Precedent Matching</h2>
+            <p class="pane-desc" data-i18n="precedent_desc">Semantic vector retrieval across Supreme Court & High Court commercial judgments with factual similarity scoring.</p>
+          </div>
+          <div class="search-precedent-box">
+            <input type="text" id="precedent-search-input" class="search-input" placeholder="Search by Legal Proposition, Section, or Judge..." value="Liquidated Damages under Section 74 Indian Contract Act Kailash Nath">
+            <button class="btn-primary-action" id="btn-search-precedents" data-i18n="btn_search_cases">Search Precedents</button>
+          </div>
+        </div>
+
+        <div class="precedents-list-grid" id="precedents-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- TAB 6: LAWYER CREDIBILITY & HONESTY SCORING -->
+      <section id="tab-lawyer-scoring" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="lawyer_score_title">Advocate Argument & Precedent Integrity Index</h2>
+            <p class="pane-desc" data-i18n="lawyer_score_desc">Evaluates counsels on citation accuracy, misquoted precedents, factual consistency across affidavits, and bench candor.</p>
+          </div>
+        </div>
+
+        <div class="lawyers-comparison-grid" id="lawyers-comparison-container">
+          <!-- Dynamically populated for Plaintiff and Defendant Counsel -->
+        </div>
+      </section>
+
+      <!-- TAB 7: HISTORICAL DISPOSAL TRENDS & ANALYTICS -->
+      <section id="tab-historical-trends" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="trends_title">Commercial Court Historical Trends & Disposal Analytics</h2>
+            <p class="pane-desc" data-i18n="trends_desc">Statistical models predicting resolution timelines, win-loss probabilities, and average settlement valuations.</p>
+          </div>
+        </div>
+
+        <div class="trends-grid">
+          <div class="court-card">
+            <h3 class="card-title" data-i18n="trends_disposal_title">Average Disposal Time by Commercial Dispute Category (Months)</h3>
+            <div class="chart-container" id="disposal-chart-container">
+              <!-- Rendered via CSS/HTML Bar Chart -->
+            </div>
+          </div>
+          <div class="court-card">
+            <h3 class="card-title" data-i18n="trends_outcome_title">Outcome Probability by Evidence Threshold</h3>
+            <div class="chart-container" id="outcome-chart-container">
+              <!-- Rendered via CSS/HTML Area / Meter -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LAWYER PORTAL TAB 1: ADVOCATE WORKSPACE -->
+      <section id="tab-lawyer-workspace" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="lawyer_ws_title">Commercial Advocate Brief & Strategy Workspace</h2>
+            <p class="pane-desc" data-i18n="lawyer_ws_desc">Prepare pleadings, check evidence admissibility risks, and audit client documents prior to filing.</p>
+          </div>
+          <div class="pane-actions">
+            <button class="btn-primary-action" id="btn-create-suit-brief">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span data-i18n="btn_new_brief">Draft Commercial Plaint</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="lawyer-workspace-grid" id="lawyer-workspace-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- LAWYER PORTAL TAB 2: AI COURTROOM DEBATE SIMULATOR -->
+      <section id="tab-debate-simulator" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="debate_title">AI Courtroom Argument & Mock Trial Simulator</h2>
+            <p class="pane-desc" data-i18n="debate_desc">Practice your oral arguments before an AI Commercial Judge. Test opposing counsel objections and receive real-time scoring.</p>
+          </div>
+          <div class="debate-controls">
+            <button class="btn-secondary" id="btn-clear-debate">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span data-i18n="btn_clear_debate">Reset Simulation</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="courtroom-simulator-layout">
+          <!-- Simulator Left: Live Courtroom Bench & Dialogue Feed -->
+          <div class="simulator-chat-pane">
+            <div class="bench-profile-banner">
+              <div class="judge-avatar">⚖️</div>
+              <div class="judge-info">
+                <h4 data-i18n="bench_presiding_officer">Hon'ble Commercial Bench (AI Judicial Simulator)</h4>
+                <p data-i18n="bench_doctrine">Strict standard on Section 65B/BSA 63 and Section 74 Indian Contract Act</p>
+              </div>
+              <div class="debate-score-pill">
+                <span data-i18n="advocate_arg_score">Argument Quality:</span>
+                <strong id="live-argument-score" class="score-strong">85/100</strong>
+              </div>
+            </div>
+
+            <!-- Dialogue History -->
+            <div class="debate-dialogue-stream" id="debate-dialogue-stream">
+              <!-- Dynamically populated messages -->
+            </div>
+
+            <!-- Argument Input Controls -->
+            <div class="debate-input-bar">
+              <div class="quick-argument-prompts" id="quick-argument-prompts">
+                <!-- Suggested arguments pills -->
+              </div>
+              <form id="debate-form" class="debate-input-form">
+                <input type="text" id="debate-input-text" class="debate-text-input" placeholder="Type your oral argument or legal submission to the Bench..." autocomplete="off">
+                <button type="button" id="btn-mic-argument" class="btn-icon-secondary" title="Speech Input (Web Speech API)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+                <button type="submit" class="btn-primary-action" id="btn-submit-argument">
+                  <span data-i18n="btn_submit_argument">Argue</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Simulator Right: Live AI Critique & Weak Point Detector -->
+          <div class="simulator-analytics-pane">
+            <div class="court-card">
+              <h3 class="card-title" data-i18n="critique_title">Real-Time Argument Critique</h3>
+              <div class="critique-content" id="critique-content">
+                <div class="critique-box positive">
+                  <strong data-i18n="critique_strength_label">✅ Strongest Points Made:</strong>
+                  <p id="critique-strength-text">Directly cited Clause 14.2 of the Master Agreement and corroborated with uncontroverted bank ledger extract.</p>
+                </div>
+                <div class="critique-box warning">
+                  <strong data-i18n="critique_vulnerability_label">⚠️ Potential Bench Vulnerability:</strong>
+                  <p id="critique-vulnerability-text">Defendant may claim Force Majeure under Clause 22 or failure of pre-institution mediation under Section 12A Commercial Courts Act.</p>
+                </div>
+                <div class="critique-box info">
+                  <strong data-i18n="critique_rebuttal_label">💡 Recommended Statutory Counter:</strong>
+                  <p id="critique-rebuttal-text">Cite <em>Patil Automation (2022 SC)</em> on urgent interim relief exception to Section 12A mediation bar.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="court-card">
+              <h3 class="card-title" data-i18n="opposing_objections_title">Predicted Opposing Counsel Objections</h3>
+              <div class="objections-list" id="predicted-objections-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LAWYER PORTAL TAB 3: KEY ISSUE PRIORITIZER -->
+      <section id="tab-key-issues" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="key_issues_title">Key Legal Issue Prioritizer & Framing of Issues</h2>
+            <p class="pane-desc" data-i18n="key_issues_desc">AI extraction of Order XIV issues, critical burden of proof allocations, and statutory threshold hurdles.</p>
+          </div>
+        </div>
+
+        <div class="key-issues-layout" id="key-issues-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- REAL WORLD ONGOING CASES FEED TAB -->
+      <section id="tab-real-cases" class="tab-pane">
+        <div class="pane-header">
+          <div>
+            <h2 class="pane-title" data-i18n="real_cases_title">Ongoing Landmark Commercial Cases (2024–2026)</h2>
+            <p class="pane-desc" data-i18n="real_cases_desc">Live jurisprudence tracker of active commercial disputes in Indian High Courts and the Supreme Court with automated legal principle extraction.</p>
+          </div>
+          <div class="real-cases-filters">
+            <select id="filter-case-court" class="court-filter-select">
+              <option value="all">All Courts (SC / HC / NCLAT)</option>
+              <option value="Supreme Court of India">Supreme Court of India</option>
+              <option value="Delhi High Court (Commercial Division)">Delhi High Court</option>
+              <option value="Bombay High Court (Commercial Division)">Bombay High Court</option>
+              <option value="Karnataka High Court">Karnataka High Court</option>
+            </select>
+            <button class="btn-secondary" id="btn-refresh-real-cases">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              <span data-i18n="btn_sync_live">Simulate Live Update</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="real-cases-grid" id="real-cases-grid">
+          <!-- Dynamically populated from realCasesData.js -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal: Paste Legal Text / Document Input -->
+  <div id="modal-paste-text" class="judicial-modal-backdrop" style="display:none;">
+    <div class="judicial-modal">
+      <div class="modal-header">
+        <h3 data-i18n="modal_paste_title">Paste Commercial Pleadings or Agreement Text</h3>
+        <button class="modal-close-btn" id="btn-close-paste-modal">×</button>
+      </div>
+      <div class="modal-body">
+        <label for="custom-suit-title" class="form-label" data-i18n="modal_case_title_label">Case Title / Suit Reference:</label>
+        <input type="text" id="custom-suit-title" class="form-control" placeholder="e.g. Zenith Tech Pvt Ltd vs. Horizon Retailers (Comm Suit 45/2026)">
+        
+        <label for="custom-text-input" class="form-label" style="margin-top: 14px;" data-i18n="modal_text_label">Paste Legal Contract, WhatsApp Transcript, or Notice Content:</label>
+        <textarea id="custom-text-input" class="form-control" rows="8" placeholder="Paste full clauses, payment demand notices, delivery receipts, or breach allegations here..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-cancel-custom-text" data-i18n="btn_cancel">Cancel</button>
+        <button class="btn-primary-action" id="btn-analyze-custom-text" data-i18n="btn_analyze_now">Analyze with Court Sahayak AI</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/translations.js"></script>
+  <script type="module" src="js/realCasesData.js"></script>
+  <script type="module" src="js/sampleDossiers.js"></script>
+  <script type="module" src="js/knowledgeGraph.js"></script>
+  <script type="module" src="js/debateSimulator.js"></script>
+  <script type="module" src="js/pipelineViewer.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
